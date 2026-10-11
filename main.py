@@ -1,55 +1,123 @@
 # Definiowanie funkcji
 
+# 1. Dodawanie notatki
 def dodaj_notatke(sciezka="dane.txt"):
-      notatka = input("Podaj treść notatki:\n")
-      with open(sciezka,"a", encoding="utf-8") as plik:
-            plik.write(f"{notatka}\n")
+    notatka = input("Podaj treść notatki:\n")
+    with open(sciezka, "a", encoding="utf-8") as plik:
+        plik.write(f"{notatka}\n")
 
+# 2. Wyświetlanie notatek
 def wyswietl_notatki(sciezka="dane.txt"):
-      try:
-          with open(sciezka, "r", encoding="utf-8") as plik:
-              tresc = plik.read()
-              if not tresc.strip():
-                  print("Dziennik jest pusty! Dodaj wpis!")
-              else:
-                  with open(sciezka, "r", encoding="utf-8") as plik:
-                      print(f"--- Twoje notatki ---\n")
-                      nr = 1
-                      for linia in plik:
-                          print(f"{nr}. {linia.strip()}")
-                          nr += 1
-                      print(f"\n---------")
-      except FileNotFoundError:
-          print("Plik nie istnieje! Najpierw dodaj notatkę!")
+    try:
+        with open(sciezka, "r", encoding="utf-8") as plik:
+            notatki = plik.read().splitlines()
+            if not notatki:
+                print("Plik jest pusty! Dodaj wpis!")
+            else:
+                print("--- Twoje notatki ---\n")
+                for nr, linia in enumerate(notatki, start=1):
+                    print(f"{nr}. {linia}")
+                print("\n---------")
+    except FileNotFoundError:
+        print("Plik nie istnieje! Najpierw dodaj notatkę!")
 
+# 3. Edycja notatki
+def edytuj_notatke(sciezka="dane.txt"):
+    try:
+        with open(sciezka, "r", encoding="utf-8") as plik:
+            notatki = plik.read().splitlines()
+            if not notatki:
+                print("Plik jest pusty! Dodaj wpis!")
 
+        wyswietl_notatki(sciezka)
+        wybor = int(input("Podaj numer notatki do edycji: "))
+
+        if wybor <= 0:
+            raise IndexError
+
+        nowa_tresc = input("Podaj nową treść: ")
+        notatki[wybor - 1] = nowa_tresc
+
+        with open(sciezka, "w", encoding="utf-8") as plik:
+            for linia in notatki:
+                plik.write(f"{linia}\n")
+
+    except FileNotFoundError:
+        print("Plik nie istnieje! Najpierw dodaj notatki!")
+        return
+
+    except IndexError:
+        print("Brak notatki o takim numerze!")
+
+    except ValueError:
+        print("Podaj poprawną liczbę!")
+
+# 4. Usuwanie notatki
+def usun_notatke(sciezka="dane.txt"):
+    try:
+        with open(sciezka, "r", encoding="utf-8") as plik:
+            notatki = plik.read().splitlines()
+
+        if not notatki:
+            print("Plik jest pusty! Nie ma czego usuwać.")
+            return
+
+        wyswietl_notatki(sciezka)
+        wybor = int(input("Podaj numer notatki do usunięcia: "))
+        if wybor <= 0:
+            raise IndexError
+
+        usunieta = notatki.pop(wybor - 1)
+
+        with open(sciezka, "w", encoding="utf-8") as plik:
+            for linia in notatki:
+                plik.write(f"{linia}\n")
+
+        print(f"Pomyślnie usunięto: '{usunieta}'")
+    except FileNotFoundError:
+        print("Plik nie istnieje! Najpierw dodaj notatki!")
+    except IndexError:
+        print("Brak notatki o takim numerze!")
+    except ValueError:
+        print("Podaj poprawną liczbę")
+
+# 5. Czyszczenie wszystkich notatek
 def wyczysc_notatki(sciezka="dane.txt"):
-      with open(sciezka, "w", encoding="utf-8") as plik:
-            pass
-      print("Notes wyczyszczony!")
+    with open(sciezka, "w", encoding="utf-8") as plik:
+        pass
+    print("Notes wyczyszczony!")
 
 
-# Główny programg
-print("============")
-print(" MINI NOTES ")
-print("============\n")
+# Główny program
+
+print("================")
+print(" MINI NOTES 4.0 ")
+print("================\n")
 
 while True:
+    print(
+        "\n1. Dodaj nowy wpis\n"
+        "2. Wyświetl wpisy\n"
+        "3. Edytuj notatkę\n"
+        "4. Usuń notatkę\n"
+        "5. Czyszczenie wszytkich notatek\n"
+        "0. Wyjdź"
+    )
 
-      print("\n1. Dodaj nowy wpis\n"
-            "2. Wyświetl wpisy\n"
-            "3. Czyszczenie notatek\n"
-            "0. Wyjdź")
+    wybor = input("Wybierz opcję: ")
 
-      wybor = input("Wybierz opcję: ")
-
-      if wybor == "1":
-            dodaj_notatke()
-      elif wybor == "2":
-            wyswietl_notatki()
-      elif wybor == "3":
-            wyczysc_notatki()
-      elif wybor == "0":
-            break
-      else:
-            print("Błędny wybór!")
+    if wybor == "1":
+        dodaj_notatke()
+    elif wybor == "2":
+        wyswietl_notatki()
+    elif wybor == "3":
+        edytuj_notatke()
+    elif wybor == "4":
+        usun_notatke()
+    elif wybor == "5":
+        wyczysc_notatki()
+    elif wybor == "0":
+        print("Do widzenia!")
+        break
+    else:
+        print("Błędny wybór!")
