@@ -2,7 +2,7 @@
 
 # 1. Dodawanie notatki
 def dodaj_notatke(sciezka="dane.txt"):
-    notatka = input("Podaj treść notatki:\n")
+    notatka = input("\nPodaj treść notatki:\n")
     with open(sciezka, "a", encoding="utf-8") as plik:
         plik.write(f"{notatka}\n")
 
@@ -14,10 +14,11 @@ def wyswietl_notatki(sciezka="dane.txt"):
             if not notatki:
                 print("Plik jest pusty! Dodaj wpis!")
             else:
-                print("--- Twoje notatki ---\n")
+                print("\n--- Twoje notatki ---\n")
                 for nr, linia in enumerate(notatki, start=1):
                     print(f"{nr}. {linia}")
-                print("\n---------")
+                print("\n---")
+
     except FileNotFoundError:
         print("Plik nie istnieje! Najpierw dodaj notatkę!")
 
@@ -30,12 +31,12 @@ def edytuj_notatke(sciezka="dane.txt"):
                 print("Plik jest pusty! Dodaj wpis!")
 
         wyswietl_notatki(sciezka)
-        wybor = int(input("Podaj numer notatki do edycji: "))
+        wybor = int(input("\nPodaj numer notatki do edycji: "))
 
         if wybor <= 0:
             raise IndexError
 
-        nowa_tresc = input("Podaj nową treść: ")
+        nowa_tresc = input("\nPodaj nową treść: ")
         notatki[wybor - 1] = nowa_tresc
 
         with open(sciezka, "w", encoding="utf-8") as plik:
@@ -63,7 +64,7 @@ def usun_notatke(sciezka="dane.txt"):
             return
 
         wyswietl_notatki(sciezka)
-        wybor = int(input("Podaj numer notatki do usunięcia: "))
+        wybor = int(input("\nPodaj numer notatki do usunięcia: "))
         if wybor <= 0:
             raise IndexError
 
@@ -91,17 +92,17 @@ def wyczysc_notatki(sciezka="dane.txt"):
 # Główny program
 
 print("================")
-print(" MINI NOTES 4.0 ")
+print(" MINI NOTES 4.1 ")
 print("================\n")
 
 while True:
-    print(
+    print("\n--- Menu opcji ---"
         "\n1. Dodaj nowy wpis\n"
         "2. Wyświetl wpisy\n"
         "3. Edytuj notatkę\n"
         "4. Usuń notatkę\n"
         "5. Czyszczenie wszytkich notatek\n"
-        "0. Wyjdź"
+        "0. Wyjdź\n"
     )
 
     wybor = input("Wybierz opcję: ")
@@ -117,7 +118,7 @@ while True:
     elif wybor == "5":
         wyczysc_notatki()
     elif wybor == "0":
-        print("Do widzenia!")
+        print("\nDo widzenia!")
         break
     else:
-        print("Błędny wybór!")
+        print("\nBłędny wybór!")
