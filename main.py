@@ -1,7 +1,7 @@
 def read_notes(path="dane.txt"):
     try:
         with open(path, "r", encoding="utf-8") as file:
-        return file.read().splitlines()
+            return file.read().splitlines()
     except FileNotFoundError:
         return []
 
@@ -18,20 +18,34 @@ def new_note():
     print("Note saved!")
 
 def show_notes():
-    notes = read_notes()
-    if not notes:
+    notes_list = read_notes()
+    if not notes_list:
         print("File is empty or doesn't exist!")
         return
 
     print("--- Your notes ---")
-    for i, line in enumerate(notes, start=1):
+    for i, line in enumerate(notes_list, start=1):
         print(f"{i}. {line}")
     print("\n ---")
 
+def search_note():
+    notes_list = read_notes()
+    phrase = input("Enter phrase: ")
+    found = False
+    if not notes_list:
+        print("File is empty or doesn't exist!")
+        return
+    for i, line in enumerate(notes_list, start=1):
+        if phrase.lower() in line.lower():
+            print(f"{i}. {line}")
+            found = True
+    if not found:
+        print("\nNo matching notes found!")
+
 def edit_note():
-    notes = read_notes()
+    notes_list = read_notes()
     try:
-        if not notes:
+        if not notes_list:
             print("File is empty or doesn't exist!")
             return
         show_notes()
@@ -42,9 +56,9 @@ def edit_note():
 
         new_content = input("Enter new content of the note!:\n")
 
-        notes[choice - 1] = new_content
+        notes_list[choice - 1] = new_content
 
-        save_notes(notes)
+        save_notes(notes_list)
 
     except ValueError:
         print("Enter correct note number!")
@@ -55,9 +69,9 @@ def edit_note():
 
 def delete_note():
     try:
-        notes = read_notes()
+        notes_list = read_notes()
 
-        if not notes:
+        if not notes_list:
             print("File is empty or doesn't exist!")
             return
         show_notes()
@@ -66,9 +80,9 @@ def delete_note():
         if choice <= 0:
             raise IndexError
 
-        deleted_note = notes.pop(choice - 1)
+        deleted_note = notes_list.pop(choice - 1)
 
-        save_notes(notes)
+        save_notes(notes_list)
 
         print(f"Deleted note: {deleted_note}")
 
@@ -94,9 +108,10 @@ while True:
     print("\n --- Option menu --- \n"
           "1. Add new note\n"
           "2. Show all notes\n"
-          "3. Edit note\n"
-          "4. Delete note\n"
-          "5. Clear all notes\n"
+          "3. Search notes\n"
+          "4. Edit note\n"
+          "5. Delete note\n"
+          "6. Clear all notes\n"
           "0. Exit app\n"
           )
 
@@ -107,10 +122,12 @@ while True:
     elif choice == "2":
         show_notes()
     elif choice == "3":
-        edit_note()
+        search_note()
     elif choice == "4":
-        delete_note()
+        edit_note()
     elif choice == "5":
+        delete_note()
+    elif choice == "6":
         clear_all()
     elif choice == "0":
         print("Goodbye!")
